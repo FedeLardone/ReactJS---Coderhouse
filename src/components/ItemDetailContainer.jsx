@@ -1,35 +1,33 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-
 import Container from 'react-bootstrap/Container';
 import {ItemList} from './ItemList'
-
 import data from '../data/products.json'
 
-export const ItemListContainer = () => {
-    const [products, setProducts] = useState([]);
+
+
+export const ItemDetailContainer = () => {
+    const [product, setProduct] = useState([null]);
 
     const {id} = useParams();
 
     useEffect(() => {
         const get = new Promise((resolve, reject) => {
-            setTimeout(() => resolve(data), 2000);
+        setTimeout(() => resolve(data), 2000);
         });
 
         get.then((data) => {
-            if(id){
-                const filteredData = data.filter((d) => d.category === id);
-                setProducts(filteredData);
-            } else{
-                setProducts(data);
-            }
+            const filteredData = data.find((d) => d.id === id);
+            setProduct(filteredData);
         });
     }, [id]);
 
+    if (!product) return null;
+
     return (
     <Container className="mt-4">
-    <ItemList products={products} />
+    <div>{product.title}</div>
+    <img src={product.pictureUrl} alt={product.title} />
     </Container>
     );
 };
